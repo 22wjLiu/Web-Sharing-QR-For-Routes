@@ -1,7 +1,7 @@
-import vue from 'eslint-plugin-vue'
-import tseslint from '@typescript-eslint/eslint-plugin'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import prettierConfig from '@vue/eslint-config-prettier'
+import vue from 'eslint-plugin-vue';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
+import prettierConfig from '@vue/eslint-config-prettier';
 
 export default defineConfigWithVueTs([
   vueTsConfigs.recommended,
@@ -13,10 +13,9 @@ export default defineConfigWithVueTs([
       '@typescript-eslint': tseslint,
     },
     rules: {
-      // 一些常见自定义
       'vue/multi-word-component-names': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
   prettierConfig,
-])
+]);
