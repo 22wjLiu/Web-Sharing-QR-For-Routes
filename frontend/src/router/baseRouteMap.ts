@@ -5,10 +5,10 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'Default',
     component: () => import('@/layouts/DefaultLayout.vue'),
-    redirect: '/Home',
+    redirect: '/index',
     children: [
       {
-        path: '/Home',
+        path: '/home',
         name: 'Home',
         component: () => import('@/views/Home.vue'),
         meta: {
