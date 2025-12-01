@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'Default',
     component: () => import('@/layouts/DefaultLayout.vue'),
-    redirect: '/index',
+    redirect: '/home',
     children: [
       {
         path: '/home',
@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Login',
         component: () => import('@/views/Login.vue'),
         meta: {
-          title: '戏曲地图——首页',
+          title: '戏曲地图——登录',
         },
       },
       {
