@@ -15,6 +15,22 @@ const routes: RouteRecordRaw[] = [
           title: '戏曲地图——首页',
         },
       },
+      {
+        path: '/routes',
+        name: 'Routes',
+        component: () => import('@/views/Home.vue'),
+        meta: {
+          title: '戏曲地图——路线广场',
+        },
+      },
+      {
+        path: '/tutorial',
+        name: 'Tutorial',
+        component: () => import('@/views/Home.vue'),
+        meta: {
+          title: '戏曲地图——教程',
+        },
+      },
     ],
   },
   {
