@@ -46,7 +46,7 @@ export default defineConfig({
       },
       {
         value: "perf",
-        name: "perf:     ⚡️  性能优化",
+        name: "perf:     ⚡️  优化代码",
         emoji: ":zap:",
       },
       {
