@@ -1,8 +1,8 @@
 <template>
-  <main class="main-conatiner">
+  <main class="main-conatiner-register">
     <section class="setps-container">
       <section class="top">
-        <h3>戏曲地图——注册账号</h3>
+        <span class="title">戏曲地图</span>
         <el-steps direction="vertical" :active="registerStatus" finish-status="success">
           <el-step :icon="Postcard" title="基本信息" description="提供用户名、邮箱和密码" />
           <el-step :icon="Message" title="验证邮箱" description="输入您的邮箱验证码" />
@@ -33,15 +33,20 @@
           >
             <!-- 用户名 -->
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="registerForm.username" />
+              <el-input v-model="registerForm.username" placeholder="请输入用户名" />
             </el-form-item>
             <!-- 邮箱 -->
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="registerForm.email" />
+              <el-input v-model="registerForm.email" placeholder="请输入邮箱" />
             </el-form-item>
             <!-- 密码 -->
             <el-form-item label="密码" prop="password">
-              <el-input v-model="registerForm.password" />
+              <el-input
+                v-model="registerForm.password"
+                type="password"
+                placeholder="请输入密码"
+                show-password
+              />
             </el-form-item>
             <div class="strength-bars" :class="`level-${strengthLevel}`">
               <div
@@ -86,7 +91,8 @@
 
         <section class="third">
           <section class="tip">
-            <h2>注册成功</h2>
+            <h1 style="font-size: 45px; color: #67c23a">注册成功</h1>
+            <span>将在{{ jumpCountDown }}秒后跳转到<b>首页</b></span>
           </section>
         </section>
       </div>
@@ -98,7 +104,11 @@
 import type { FormInstance, FormRules } from 'element-plus';
 import { Back, Postcard, Message, CircleCheckFilled } from '@element-plus/icons-vue';
 import { ref, reactive, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import OtpInput from '@/components/OtpInput.vue';
+
+// 全局路由
+const router = useRouter();
 
 // 注册状态
 const registerStatus = ref<number>(0);
@@ -212,33 +222,39 @@ const strengthLabel = computed(() => {
 const handleFirstContinue = async (registerFormEl: FormInstance | undefined) => {
   if (!registerFormEl) return;
 
-  await registerFormEl.validate((valid, fields) => {
-    console.log(fields);
+  await registerFormEl.validate((valid, _) => {
     if (valid) {
       currentIndex.value = 1;
       registerStatus.value = 1;
-    } else {
-      console.log('error submit!', fields);
     }
   });
 };
 
-// 处理第而次点击继续
+// 跳转首页倒计时
+const jumpCountDown = ref<number>(3);
+
+// 处理第二次点击继续
 const handleSecondContinue = async (vertifyFormEl: FormInstance | undefined) => {
   if (!vertifyFormEl) return;
-  await vertifyFormEl.validate((valid, fields) => {
+  await vertifyFormEl.validate((valid, _) => {
     if (valid) {
       currentIndex.value = 2;
       registerStatus.value = 2;
-    } else {
-      console.log('error submit!', fields);
+
+      const timer = setInterval(() => {
+        jumpCountDown.value -= 1;
+        if (jumpCountDown.value === 0) {
+          clearInterval(timer);
+          router.push('/home');
+        }
+      }, 1000);
     }
   });
 };
 </script>
 
 <style scoped lang="less">
-.main-conatiner {
+.main-conatiner-register {
   display: flex;
   width: 100%;
   height: 100%;
@@ -248,11 +264,10 @@ const handleSecondContinue = async (vertifyFormEl: FormInstance | undefined) => 
     flex-direction: column;
     justify-content: space-between;
     width: 30%;
-    border-radius: 10px;
     padding: 0 20px;
     padding-top: 24px;
     padding-bottom: 16px;
-    background-color: #fafafa;
+    border-right: 1px dashed #d8d8d8;
 
     & > .top {
       flex: 1 1 auto;
@@ -261,13 +276,29 @@ const handleSecondContinue = async (vertifyFormEl: FormInstance | undefined) => 
       gap: 10%;
       max-height: 60%;
 
+      & > .title {
+        text-align: center;
+        padding: 2px 10px;
+        margin-bottom: 8px;
+        border-radius: 999px;
+        font-size: 16px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #b91c1c;
+        background: rgba(185, 28, 28, 0.06);
+      }
+
       & > .el-steps {
+        & :deep(.el-step__icon) {
+          background: rgb(244, 244, 244);
+        }
+
         & :deep(.el-step__title) {
-          font-size: 16px;
+          font-size: 14px;
         }
 
         & :deep(.el-step__description) {
-          font-size: 12px;
+          font-size: 10px;
         }
       }
     }
