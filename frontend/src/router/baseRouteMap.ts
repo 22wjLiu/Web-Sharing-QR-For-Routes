@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Home',
         component: () => import('@/views/Home.vue'),
         meta: {
-          title: '戏曲地图——首页',
+          title: '首页',
         },
       },
       {
@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Routes',
         component: () => import('@/views/Home.vue'),
         meta: {
-          title: '戏曲地图——路线广场',
+          title: '路线广场',
         },
       },
       {
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Tutorial',
         component: () => import('@/views/Home.vue'),
         meta: {
-          title: '戏曲地图——教程',
+          title: '教程',
         },
       },
     ],
@@ -38,7 +38,7 @@ const routes: RouteRecordRaw[] = [
     name: 'LoginRegister',
     component: () => import('@/layouts/LoginRegisterLayout.vue'),
     meta: {
-      title: '戏曲地图——登录',
+      title: '登录',
     },
     redirect: '/login',
     children: [
@@ -47,7 +47,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Login',
         component: () => import('@/views/Login.vue'),
         meta: {
-          title: '戏曲地图——登录',
+          title: '登录',
         },
       },
       {
@@ -55,7 +55,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Register',
         component: () => import('@/views/Register.vue'),
         meta: {
-          title: '戏曲地图——注册',
+          title: '注册',
         },
       },
     ],
@@ -65,7 +65,7 @@ const routes: RouteRecordRaw[] = [
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue'),
     meta: {
-      title: '戏曲地图',
+      title: '404',
     },
   },
 ];

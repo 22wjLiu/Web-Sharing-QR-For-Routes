@@ -11,7 +11,7 @@ const DEFAULT_TITLE = '戏曲地图';
 router.afterEach((to) => {
   const title = to.meta.title as string | undefined;
   if (title) {
-    document.title = title;
+    document.title = `${DEFAULT_TITLE}——${title}`;
   } else {
     document.title = DEFAULT_TITLE;
   }
