@@ -15,10 +15,6 @@
   align-items: center;
   padding: 40px 16px;
 
-  background:
-    radial-gradient(circle at 0 0, rgba(185, 28, 28, 0.06), transparent 55%),
-    radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.06), transparent 60%), #f3f4f6;
-
   & > .login-register-card-container {
     margin: 0 auto;
     width: 65%;
