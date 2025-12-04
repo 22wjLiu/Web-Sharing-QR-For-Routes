@@ -35,5 +35,6 @@ declare module 'vue' {
     OtpInput: typeof import('./src/components/OtpInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TypingText: typeof import('./src/components/TypingText.vue')['default']
   }
 }
