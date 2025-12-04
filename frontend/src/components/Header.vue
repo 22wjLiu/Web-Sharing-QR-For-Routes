@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <div class="header">
     <div class="header__inner">
       <section class="left">
         <div class="logo" @click="router.push('/')">
@@ -32,10 +32,10 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <butto v-else class="login-btn" @click="router.push('/login')">登录</butto>
+        <button v-else class="login-btn" @click="router.push('/login')">登录</button>
       </section>
     </div>
-  </header>
+  </div>
 </template>
 
 <script setup lang="ts">

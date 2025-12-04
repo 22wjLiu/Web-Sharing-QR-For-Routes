@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer">
+  <div class="footer">
     <div class="footer__inner">
       <section class="left footer__col" @click="router.push('/')">
         <div class="logo">
@@ -29,7 +29,7 @@
     <div class="footer__bottom">
       <span> © {{ year }} 戏曲地图 · All rights reserved. </span>
     </div>
-  </footer>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -60,13 +60,14 @@ const isActive = (item: { path: string }) => {
 <style scoped lang="less">
 .footer {
   margin-top: 40px;
-  padding: 24px 16px 18px;
+  padding-inline: 16px;
+  padding-top: 24px;
   background: radial-gradient(circle at 0 0, #f1f5f9, #f9fafb);
   border-top: 1px solid rgba(148, 163, 184, 0.3);
   color: #475569;
   font-size: 13px;
 
-  &__inner {
+  & > .footer__inner {
     max-width: 1120px;
     margin: 0 auto 12px;
     display: flex;

@@ -1,8 +1,8 @@
 <template>
-  <el-container>
+  <el-container style="min-height: 100vh">
     <el-header style="padding: 0"><Header :nav-items="navItems" /></el-header>
     <el-main style="padding: 0"><RouterView /></el-main>
-    <el-footer style="padding: 0"><Footer :nav-items="navItems" /></el-footer>
+    <el-footer height="auto" style="padding: 0"><Footer :nav-items="navItems" /></el-footer>
   </el-container>
 </template>
 
