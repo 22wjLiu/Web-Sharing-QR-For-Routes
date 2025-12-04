@@ -1,0 +1,83 @@
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: QRForRoutes
+  # ================== MySQL 数据源 ==================
+  datasource:
+    url: jdbc:mysql://localhost:3306/qr_for_routes
+      ?useUnicode=true
+      &characterEncoding=utf-8
+      &serverTimezone=Asia/Shanghai
+      &useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # ================== Redis ==================
+  data:
+    redis:                        # Boot 3 建议用 spring.data.redis.*
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      # password: your_redis_password   # 没密码可以删掉
+      timeout: 3000ms                  # 连接超时时间
+      lettuce:
+        pool:                          # 连接池配置（可选）
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 1s
+
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# ================== MyBatis-Plus ==================
+mybatis-plus:
+  # mapper XML 放的位置
+  mapper-locations: classpath*:/mapper/**/*.xml
+  # 实体类包名
+  type-aliases-package: com.liu.qrRoutes.domain
+
+  configuration:
+    # 下划线转驼峰 user_name -> userName
+    map-underscore-to-camel-case: true
+    # 是否开启二级缓存
+    cache-enabled: false
+    # 控制台打印 SQL（开发阶段非常方便）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  global-config:
+    db-config:
+      # 主键策略（AUTO=数据库自增）
+      id-type: auto
+      # 逻辑删除（如果你要用，可选）
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# ================== Logback（通过 logging.* 这层来配） ==================
+logging:
+  # 指定是否使用自定义 logback-spring.xml（有就写，没有可先不写）
+  # config: classpath:logback-spring.xml
+
+  level:
+    root: info
+    # 你自己项目包的日志级别
+    com.liu: debug
+    # MyBatis-Plus 相关日志（看 SQL 可以开到 debug）
+    com.baomidou.mybatisplus: debug
+    # Mapper 包单独控制也可以：
+    # com.liu.qrRoutes.mapper: debug
+
+  # 日志文件输出配置（简单版）
+  file:
+    name: logs/qrRoutes.log
+
+  # 控制台日志格式（可选）
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
+
