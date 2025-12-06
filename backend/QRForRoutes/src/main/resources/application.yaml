@@ -1,4 +1,3 @@
-
 server:
   port: 8080
 
@@ -7,22 +6,22 @@ spring:
     name: QRForRoutes
   # ================== MySQL 数据源 ==================
   datasource:
-    url: jdbc:mysql://localhost:3306/qr_for_routes
+    url: jdbc:mysql://114.66.42.112:10086/qr_for_routes
       ?useUnicode=true
       &characterEncoding=utf-8
       &serverTimezone=Asia/Shanghai
       &useSSL=false
     username: root
-    password: 123456
+    password: odwaudhaodhwad
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # ================== Redis ==================
   data:
-    redis:                        # Boot 3 建议用 spring.data.redis.*
-      host: 127.0.0.1
-      port: 6379
+    redis:
+      host: 114.66.42.112
+      port: 10087
       database: 0
-      # password: your_redis_password   # 没密码可以删掉
+      password: dahduoahwduoad
       timeout: 3000ms                  # 连接超时时间
       lettuce:
         pool:                          # 连接池配置（可选）
@@ -35,49 +34,58 @@ spring:
     time-zone: Asia/Shanghai
     date-format: yyyy-MM-dd HH:mm:ss
 
+  # ================== 邮箱 ==================
+  mail:
+    host: smtp.qq.com
+    username: studentclubmanager@qq.com
+    password: toxvuhrshbxhcgif
+    port: 465
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+
 # ================== MyBatis-Plus ==================
 mybatis-plus:
   # mapper XML 放的位置
   mapper-locations: classpath*:/mapper/**/*.xml
   # 实体类包名
-  type-aliases-package: com.liu.qrRoutes.domain
+  type-aliases-package: com.liu.qrRoutes.model
 
   configuration:
-    # 下划线转驼峰 user_name -> userName
+    # 下划线转驼峰
     map-underscore-to-camel-case: true
     # 是否开启二级缓存
     cache-enabled: false
-    # 控制台打印 SQL（开发阶段非常方便）
+    # 控制台打印 SQL
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
   global-config:
     db-config:
       # 主键策略（AUTO=数据库自增）
       id-type: auto
-      # 逻辑删除（如果你要用，可选）
-      logic-delete-field: deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
 
-# ================== Logback（通过 logging.* 这层来配） ==================
+# ================== Logback ==================
 logging:
-  # 指定是否使用自定义 logback-spring.xml（有就写，没有可先不写）
-  # config: classpath:logback-spring.xml
-
   level:
     root: info
-    # 你自己项目包的日志级别
+    # 全局项目包的日志级别
     com.liu: debug
-    # MyBatis-Plus 相关日志（看 SQL 可以开到 debug）
+    # MyBatis-Plus 相关日志
     com.baomidou.mybatisplus: debug
-    # Mapper 包单独控制也可以：
-    # com.liu.qrRoutes.mapper: debug
-
   # 日志文件输出配置（简单版）
   file:
     name: logs/qrRoutes.log
-
-  # 控制台日志格式（可选）
+  # 控制台日志格式
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
 
+# ================== 静态资源 ==================
+resource:
+  root-url: file:/Volumes/SanDisk_Mac/WorkPlace/GITHUB_WORKPLACE/Web-Sharing-QR-For-Routes/backend/QRForRoutes/resource
+  avatar-dir: avatar
+  avatar-default: default.jpg
+  qr-dir: qr
