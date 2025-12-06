@@ -18,10 +18,11 @@
         :rules="loginRules"
         label-position="top"
         label-width="auto"
+        @keydown.enter="handleLogin(loginFormRef)"
       >
         <!-- 用户名或者邮箱 -->
-        <el-form-item label="帐号" prop="account">
-          <el-input v-model="loginForm.account" placeholder="请输入用户名或者邮箱" />
+        <el-form-item label="帐号" prop="emailOrName">
+          <el-input v-model="loginForm.emailOrName" placeholder="请输入用户名或者邮箱" />
         </el-form-item>
         <!-- 密码 -->
         <el-form-item label="密码" prop="password">
@@ -42,30 +43,46 @@
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus';
+import { ElLoading } from 'element-plus';
 import { Back } from '@element-plus/icons-vue';
 import { ref, reactive } from 'vue';
+import { useUserStore } from '@/store/user';
+import router from '@/router';
+
+const { login } = useUserStore();
 
 // 登录表单
 interface LoginForm {
-  account: string;
+  emailOrName: string;
   password: string;
 }
 const loginFormRef = ref<FormInstance>();
 const loginForm = reactive<LoginForm>({
-  account: '',
+  emailOrName: '',
   password: '',
 });
 const loginRules = reactive<FormRules<LoginForm>>({
-  account: { required: true, message: '请输入用户名或者邮箱', trigger: 'blur' },
+  emailOrName: { required: true, message: '请输入用户名或者邮箱', trigger: 'blur' },
   password: { required: true, message: '请输入密码', trigger: 'blur' },
 });
 const handleLogin = async (loginFormEl: FormInstance | undefined) => {
   if (!loginFormEl) return;
 
-  await loginFormEl.validate((valid, _) => {
-    if (valid) {
-    }
+  const isValid = await loginFormEl.validate().catch(() => false);
+  if (!isValid) return;
+
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: '登录中...',
   });
+
+  try {
+    await login({ emailOrName: loginForm.emailOrName, password: loginForm.password });
+    router.push('/home');
+  } catch {
+  } finally {
+    loadingInstance.close();
+  }
 };
 </script>
 

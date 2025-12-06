@@ -32,8 +32,8 @@
             label-width="auto"
           >
             <!-- 用户名 -->
-            <el-form-item label="用户名" prop="username">
-              <el-input v-model="registerForm.username" placeholder="请输入用户名" />
+            <el-form-item label="用户名" prop="name">
+              <el-input v-model="registerForm.name" placeholder="请输入用户名" />
             </el-form-item>
             <!-- 邮箱 -->
             <el-form-item label="邮箱" prop="email">
@@ -92,7 +92,7 @@
         <section class="third">
           <section class="tip">
             <h1 style="font-size: 45px; color: #67c23a">注册成功</h1>
-            <span>将在{{ jumpCountDown }}秒后跳转到<b>首页</b></span>
+            <span>将在{{ jumpCountDown }}秒后跳转到<b>登录页面</b></span>
           </section>
         </section>
       </div>
@@ -101,11 +101,14 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage, ElLoading } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Back, Postcard, Message, CircleCheckFilled } from '@element-plus/icons-vue';
 import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import OtpInput from '@/components/OtpInput.vue';
+import { sendCode } from '@/api/email';
+import { register } from '@/api/user';
 
 // 全局路由
 const router = useRouter();
@@ -115,18 +118,18 @@ const registerStatus = ref<number>(0);
 
 // 注册表单
 interface RegisterForm {
-  username: string;
+  name: string;
   email: string;
   password: string;
 }
 const registerFormRef = ref<FormInstance>();
 const registerForm = reactive<RegisterForm>({
-  username: '',
+  name: '',
   email: '',
   password: '',
 });
 const registerRules = reactive<FormRules<RegisterForm>>({
-  username: [
+  name: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 2, max: 20, message: '用户名长度为 2~20 个字符', trigger: 'blur' },
   ],
@@ -222,12 +225,23 @@ const strengthLabel = computed(() => {
 const handleFirstContinue = async (registerFormEl: FormInstance | undefined) => {
   if (!registerFormEl) return;
 
-  await registerFormEl.validate((valid, _) => {
-    if (valid) {
-      currentIndex.value = 1;
-      registerStatus.value = 1;
-    }
+  const isValid = await registerFormEl.validate().catch(() => false);
+  if (!isValid) return;
+
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: '验证码发送中...',
   });
+
+  try {
+    await sendCode({ name: registerForm.name, email: registerForm.email, type: 'REGISTER' });
+    ElMessage.success('验证码已发送，请前往邮箱查收');
+    currentIndex.value = 1;
+    registerStatus.value = 1;
+  } catch {
+  } finally {
+    loadingInstance.close();
+  }
 };
 
 // 跳转首页倒计时
@@ -236,20 +250,37 @@ const jumpCountDown = ref<number>(3);
 // 处理第二次点击继续
 const handleSecondContinue = async (vertifyFormEl: FormInstance | undefined) => {
   if (!vertifyFormEl) return;
-  await vertifyFormEl.validate((valid, _) => {
-    if (valid) {
-      currentIndex.value = 2;
-      registerStatus.value = 2;
 
-      const timer = setInterval(() => {
-        jumpCountDown.value -= 1;
-        if (jumpCountDown.value === 0) {
-          clearInterval(timer);
-          router.push('/home');
-        }
-      }, 1000);
-    }
+  const isValid = await vertifyFormEl.validate().catch(() => false);
+  if (!isValid) return;
+
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: '正在注册帐号...',
   });
+
+  try {
+    await register({
+      name: registerForm.name,
+      email: registerForm.email,
+      password: registerForm.password,
+      code: vertifyForm.code,
+    });
+    ElMessage.success('注册成功');
+    currentIndex.value = 2;
+    registerStatus.value = 2;
+
+    const timer = setInterval(() => {
+      jumpCountDown.value -= 1;
+      if (jumpCountDown.value === 0) {
+        clearInterval(timer);
+        router.push('/login');
+      }
+    }, 1000);
+  } catch {
+  } finally {
+    loadingInstance.close();
+  }
 };
 </script>
 

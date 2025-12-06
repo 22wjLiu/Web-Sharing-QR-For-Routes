@@ -19,16 +19,16 @@
         </nav>
       </section>
       <section class="right">
-        <el-dropdown v-if="isLogined">
+        <el-dropdown v-if="isLoggedIn">
           <span class="avatar-wrapper">
-            <el-avatar :size="36" src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" />
-            <span class="avatar-name">老畅</span>
+            <el-avatar :size="36" :src="avatarUrl" />
+            <span class="avatar-name">{{ profile?.name }}</span>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>设置</el-dropdown-item>
-              <el-dropdown-item divided>退出登录</el-dropdown-item>
+              <el-dropdown-item v-if="profile?.role === 1">后台管理</el-dropdown-item>
+              <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -39,23 +39,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/store/user';
 import type { NavItem } from '@/types/layout';
 
 const router = useRouter();
 const route = useRoute();
 
+const userStore = useUserStore();
+const { profile, isLoggedIn } = storeToRefs(userStore);
+const { logout } = userStore;
+const staticBaseUrl = import.meta.env.VITE_STATIC_BASE_URL || '';
+
+const buildStaticUrl = (path?: string | null) => {
+  if (!path) return '';
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  if (!staticBaseUrl) {
+    return path;
+  }
+
+  const normalizedBase = staticBaseUrl.replace(/\/$/, '');
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${normalizedBase}/${normalizedPath}`;
+};
+
+const avatarUrl = computed(() => buildStaticUrl(profile.value?.avatarUrl));
+
 defineProps<{
   navItems: NavItem[];
 }>();
-
-const isLogined = ref<boolean>(true);
 
 const go = (path: string) => {
   if (path !== route.path) {
     router.push(path);
   }
+};
+
+const handleLogout = async () => {
+  await logout();
+  router.push('/login');
 };
 
 const isActive = (item: { path: string }) => {
