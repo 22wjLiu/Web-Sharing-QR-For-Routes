@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/routes',
         name: 'Routes',
-        component: () => import('@/views/Home.vue'),
+        component: () => import('@/views/Routes.vue'),
         meta: {
           title: '路线广场',
         },
@@ -26,7 +26,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/tutorial',
         name: 'Tutorial',
-        component: () => import('@/views/Home.vue'),
+        component: () => import('@/views/Tutorial.vue'),
         meta: {
           title: '教程',
         },
@@ -56,6 +56,39 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/Register.vue'),
         meta: {
           title: '注册',
+        },
+      },
+    ],
+  },
+  {
+    path: '/userCenter',
+    name: 'UserCenter',
+    component: () => import('@/views/UserCenter.vue'),
+    meta: {
+      title: '用户中心',
+    },
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('@/layouts/AdminLayout.vue'),
+    children: [
+      {
+        path: '/user',
+        name: 'User',
+        component: () => import('@/views/admin/UserMana.vue'),
+        meta: {
+          title: '用户管理',
+          icon: '',
+        },
+      },
+      {
+        path: '/qr',
+        name: 'QR',
+        component: () => import('@/views/admin/QRMana.vue'),
+        meta: {
+          title: '二维码管理',
+          icon: '',
         },
       },
     ],
