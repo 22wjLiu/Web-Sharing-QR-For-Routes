@@ -15,6 +15,14 @@ const routes: RouteRecordRaw[] = [
           title: '首页',
         },
       },
+      // {
+      //   path: '/preview',
+      //   name: 'Preview',
+      //   component: () => import('@/previews/Home.vue'),
+      //   meta: {
+      //     title: '预览',
+      //   },
+      // },
       {
         path: '/routes',
         name: 'Routes',
@@ -72,23 +80,24 @@ const routes: RouteRecordRaw[] = [
     path: '/admin',
     name: 'Admin',
     component: () => import('@/layouts/AdminLayout.vue'),
+    redirect: '/admin/user',
     children: [
       {
-        path: '/user',
+        path: 'user',
         name: 'User',
         component: () => import('@/views/admin/UserMana.vue'),
         meta: {
           title: '用户管理',
-          icon: '',
+          icon: 'User',
         },
       },
       {
-        path: '/qr',
+        path: 'qr',
         name: 'QR',
-        component: () => import('@/views/admin/QRMana.vue'),
+        component: () => import('@/views/admin/RouteMana.vue'),
         meta: {
           title: '二维码管理',
-          icon: '',
+          icon: 'PictureRounded',
         },
       },
     ],

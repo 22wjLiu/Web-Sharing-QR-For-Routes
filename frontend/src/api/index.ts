@@ -42,11 +42,20 @@ service.interceptors.response.use(
     const status = error?.response?.status;
     const message = error?.response?.data?.message || error?.message || '请求出错，请稍后重试';
 
-    if (status === 401) {
-      await userStore.logout();
-      ElMessage.error('登录状态已过期，请重新登录');
-    } else {
-      ElMessage.error(message);
+    switch (status) {
+      case 401:
+        await userStore.logout();
+        ElMessage.error(message);
+        break;
+      case 403:
+        console.error(message);
+        break;
+      case 500:
+        ElMessage.error('服务未找到，请联系管理员');
+        break;
+      default:
+        ElMessage.error(message);
+        break;
     }
     return Promise.reject(error);
   },

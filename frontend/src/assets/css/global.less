@@ -14,3 +14,30 @@ button {
   background-color: transparent;
   border: none;
 }
+
+.el-dropdown .el-tooltip__trigger,
+.el-dropdown .el-tooltip__trigger:focus,
+.el-dropdown .el-tooltip__trigger:focus-visible,
+.el-dropdown .el-tooltip__trigger.is-focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+.el-input__inner:-webkit-autofill,
+.el-input__inner:-webkit-autofill:focus,
+.el-input__inner:-webkit-autofill:hover {
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
+@keyframes heart-pop {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+  }
+}

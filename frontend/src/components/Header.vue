@@ -21,13 +21,15 @@
       <section class="right">
         <el-dropdown v-if="isLoggedIn">
           <span class="avatar-wrapper">
-            <el-avatar :size="36" :src="avatarUrl" />
+            <el-avatar :size="36" :src="profile?.avatarUrl" />
             <span class="avatar-name">{{ profile?.name }}</span>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item v-if="profile?.role === 1">后台管理</el-dropdown-item>
+              <el-dropdown-item @click="goUserCenter">个人中心</el-dropdown-item>
+              <el-dropdown-item v-if="profile?.role === 1" @click="goAdmin"
+                >后台管理</el-dropdown-item
+              >
               <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -39,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/store/user';
@@ -51,24 +52,6 @@ const route = useRoute();
 const userStore = useUserStore();
 const { profile, isLoggedIn } = storeToRefs(userStore);
 const { logout } = userStore;
-const staticBaseUrl = import.meta.env.VITE_STATIC_BASE_URL || '';
-
-const buildStaticUrl = (path?: string | null) => {
-  if (!path) return '';
-  if (/^https?:\/\//i.test(path)) {
-    return path;
-  }
-
-  if (!staticBaseUrl) {
-    return path;
-  }
-
-  const normalizedBase = staticBaseUrl.replace(/\/$/, '');
-  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${normalizedBase}/${normalizedPath}`;
-};
-
-const avatarUrl = computed(() => buildStaticUrl(profile.value?.avatarUrl));
 
 defineProps<{
   navItems: NavItem[];
@@ -82,7 +65,15 @@ const go = (path: string) => {
 
 const handleLogout = async () => {
   await logout();
-  router.push('/login');
+};
+
+const goUserCenter = () => {
+  const url = router.resolve('/userCenter').href;
+  window.open(url, '_blank');
+};
+
+const goAdmin = () => {
+  router.push('/admin');
 };
 
 const isActive = (item: { path: string }) => {

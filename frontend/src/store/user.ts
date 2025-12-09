@@ -2,14 +2,28 @@ import type { User, LoginPayload } from '@/types/user';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { userLogin, userLogOut, getUserInfo } from '@/api/user';
+import router from '@/router';
+import { ElLoading } from 'element-plus';
+import { buildAvatarUrl } from '@/utils/avatar';
 
 const USER_PROFILE_KEY = 'qr_user_profile';
 const USER_TOKEN_KEY = 'qr_user_token';
 
+const formatProfile = (payload: User | null): User | null => {
+  if (!payload) {
+    return null;
+  }
+  return {
+    ...payload,
+    avatarUrl: buildAvatarUrl(payload.avatarUrl),
+  };
+};
+
 const readProfileFromStorage = (): User | null => {
   try {
     const raw = localStorage.getItem(USER_PROFILE_KEY);
-    return raw ? (JSON.parse(raw) as User) : null;
+    if (!raw) return null;
+    return formatProfile(JSON.parse(raw) as User);
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('解析存储用户信息出错:', error.message);
@@ -43,23 +57,23 @@ export const useUserStore = defineStore('user', () => {
   const isLoggedIn = computed(() => Boolean(token.value));
 
   const setProfile = (payload: User | null) => {
-    profile.value = payload;
-    persistProfile(payload);
+    const formatted = formatProfile(payload);
+    profile.value = formatted;
+    persistProfile(formatted);
   };
 
   const updateProfile = (payload: Partial<User>) => {
-    if (!profile.value) {
-      profile.value = {
-        id: payload.id ?? null,
-        email: payload.email ?? '',
-        name: payload.name ?? '',
-        avatarUrl: payload.avatarUrl ?? '',
-        role: payload.role ?? null,
-      };
-    } else {
-      profile.value = { ...profile.value, ...payload };
-    }
-    persistProfile(profile.value);
+    const nextProfile: User = profile.value
+      ? { ...profile.value, ...payload }
+      : {
+          id: payload.id ?? null,
+          email: payload.email ?? '',
+          name: payload.name ?? '',
+          avatarUrl: payload.avatarUrl ?? '',
+          role: payload.role ?? null,
+          description: payload.description ?? '',
+        };
+    setProfile(nextProfile);
   };
 
   const fetchProfile = async () => {
@@ -91,12 +105,19 @@ export const useUserStore = defineStore('user', () => {
   };
 
   const logout = async () => {
+    const loading = ElLoading.service({
+      lock: true,
+      text: '正在退出...',
+      background: 'rgba(0, 0, 0, 0.25)',
+    });
     try {
       await userLogOut();
     } finally {
+      loading.close();
       token.value = null;
       persistToken(null);
       setProfile(null);
+      router.push('/login');
     }
   };
 
