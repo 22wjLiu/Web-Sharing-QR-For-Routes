@@ -18,4 +18,8 @@ public class ResourceConfig {
   private String avatarDefault;
 
   private String qrDir;
+
+  private String routeCoverDir;
+
+  private String routeCoverDefault;
 }

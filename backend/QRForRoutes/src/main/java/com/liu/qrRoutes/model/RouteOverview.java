@@ -2,15 +2,19 @@ package com.liu.qrRoutes.model;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class Routes implements Serializable {
+public class RouteOverview {
   private Integer id;
   private String title;
   private String description;
   private String qrUrl;
+  private String coverUrl;
   private String createTime;
-  private Byte isDeleted;
+  private Byte status;
   private Integer userId;
+
+  private String authorName;
+  private String authorAvatar;
+  private long favoritesCount;
+  private boolean favorited;
 }

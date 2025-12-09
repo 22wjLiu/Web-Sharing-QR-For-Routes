@@ -8,6 +8,7 @@ public class UserProfile {
   private String name;
   private String email;
   private String avatarUrl;
+  private String description;
   private Byte role;
 
   public static UserProfile from(User user) {
@@ -20,6 +21,7 @@ public class UserProfile {
     profile.setEmail(user.getEmail());
     profile.setAvatarUrl(user.getAvatarUrl());
     profile.setRole(user.getRole());
+    profile.setDescription(user.getDescription());
     return profile;
   }
 }

@@ -89,3 +89,5 @@ resource:
   avatar-dir: avatar
   avatar-default: default.jpg
   qr-dir: qr
+  route-cover-dir: route-cover
+  route-cover-default: default-cover.png

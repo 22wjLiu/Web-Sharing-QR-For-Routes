@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -51,7 +52,7 @@ public class AuthController {
       redisService.sendRegisterCode(email);
     }
 
-    return Response.ok();
+    return Response.ok("发送验证码成功");
   }
 
   @PostMapping("/register")
@@ -66,7 +67,7 @@ public class AuthController {
     user.setPassword(passwordEncoder.encode(req.getPassword()));
     user.setAvatarUrl("/static/" + resourceConfig.getAvatarDir() + "/" + resourceConfig.getAvatarDefault());
     if(userService.insert(user)) {
-      return Response.ok();
+      return Response.ok("注册成功");
     }
 
     return Response.failed("注册失败，请稍后重试");
@@ -76,7 +77,7 @@ public class AuthController {
   public Response<Map<String, String>> login(@Valid @RequestBody LoginRequest req) {
     User user = resolveUserByIdentifier(req.getEmailOrName());
     if (user == null) {
-      return Response.failed(400, "用户名或邮箱不存在");
+      return Response.failed(Constants.ResponseCode.NOTFOUND, "用户名或邮箱不存在");
     }
 
     UsernamePasswordAuthenticationToken authToken =
@@ -84,9 +85,9 @@ public class AuthController {
     try {
       authenticationManager.authenticate(authToken);
     } catch (BadCredentialsException e) {
-      return Response.failed(400, "密码错误");
+      return Response.failed(Constants.ResponseCode.NO_PERMISSION, "密码错误");
     } catch (AuthenticationException e) {
-      return Response.failed(401, e.getMessage());
+      return Response.failed(Constants.ResponseCode.NO_PERMISSION, e.getMessage());
     }
 
     // 生成 jti
@@ -101,7 +102,7 @@ public class AuthController {
     Map<String, String> data = new HashMap<>();
     data.put("token", token);
 
-    return Response.ok(data);
+    return Response.ok("登录成功", data);
   }
 
   @PostMapping("/logout")
@@ -112,20 +113,20 @@ public class AuthController {
       User user = userService.getOneByEmail(principal.getUsername());
       redisService.removeUserInfo(user.getId());
     }
-    return Response.ok();
+    return Response.ok("退出成功");
   }
 
   @GetMapping("/getUserInfo")
   public Response<UserProfile> getUserInfo(Authentication authentication) {
     if (authentication == null) {
-      return Response.failed(401, "未登录");
+      return Response.failed(Constants.ResponseCode.NO_PERMISSION, "未登录");
     }
 
     org.springframework.security.core.userdetails.User principal =
       (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
     User user = userService.getOneByEmail(principal.getUsername());
-    if (user == null) {
-      return Response.failed(404, "用户不存在");
+    if (user == null || Objects.equals(user.getIsDeleted(), (byte) 1)) {
+      return Response.failed(Constants.ResponseCode.NOTFOUND, "用户不存在");
     }
 
     return Response.ok(UserProfile.from(user));

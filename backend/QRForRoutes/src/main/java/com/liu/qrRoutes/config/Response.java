@@ -39,15 +39,23 @@ public class Response<T> {
   public static <T> Response<T> ok() {
     return Response.<T>builder()
       .success(true)
-      .code(200)
-      .message("OK")
+      .code(Constants.ResponseCode.SUCCESS)
+      .message("ok")
+      .build();
+  }
+
+  public static <T> Response<T> ok(String message) {
+    return Response.<T>builder()
+      .success(true)
+      .code(Constants.ResponseCode.SUCCESS)
+      .message(message)
       .build();
   }
 
   public static <T> Response<T> ok(T data) {
     return Response.<T>builder()
       .success(true)
-      .code(200)
+      .code(Constants.ResponseCode.SUCCESS)
       .message("OK")
       .data(data)
       .build();
@@ -56,7 +64,7 @@ public class Response<T> {
   public static <T> Response<T> ok(String message, T data) {
     return Response.<T>builder()
       .success(true)
-      .code(200)
+      .code(Constants.ResponseCode.SUCCESS)
       .message(message)
       .data(data)
       .build();
@@ -65,7 +73,7 @@ public class Response<T> {
   public static <T> Response<T> failed(String message) {
     return Response.<T>builder()
       .success(false)
-      .code(500)
+      .code(Constants.ResponseCode.FAIL)
       .message(message)
       .build();
   }

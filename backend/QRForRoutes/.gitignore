@@ -4,6 +4,13 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Resource ###
+/resource/*
+!/resource/avatar/
+!/resource/avatar/default.jpg
+!/resource/route-cover/
+!/resource/route-cover/default-cover.png
+
 ### STS ###
 .apt_generated
 .classpath
