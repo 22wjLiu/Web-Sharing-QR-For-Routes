@@ -119,10 +119,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import { getRouteList, updateRoute, deleteRoutes } from '@/api/route';
 import type { RouteRecord } from '@/types/route';
-import { useUserStore } from '@/store/user';
 import { buildAvatarUrl } from '@/utils/avatar';
-
-const userStore = useUserStore();
 
 const searchQR = ref<string>('');
 const creatorIdFilter = ref<string>('');

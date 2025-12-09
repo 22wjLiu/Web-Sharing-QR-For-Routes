@@ -4,7 +4,7 @@ import App from '@/App.vue';
 import router from '@/router';
 import Vue3Lottie from 'vue3-lottie';
 import ElementPlus from 'element-plus';
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import '@/assets/css/global.less';
 import 'element-plus/dist/index.css';
 

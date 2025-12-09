@@ -7,6 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "dev:frontend": "pnpm --filter frontend dev",
+    "build:frontend": "pnpm --filter frontend build",
     "lint:frontend": "pnpm --filter frontend lint",
     "lint:frontend:fix": "pnpm --filter frontend lint:fix",
     "format:frontend": "pnpm --filter frontend format",
